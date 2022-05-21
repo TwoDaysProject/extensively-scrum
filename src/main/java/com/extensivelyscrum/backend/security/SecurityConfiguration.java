@@ -1,5 +1,6 @@
 package com.extensivelyscrum.backend.security;
 
+import com.extensivelyscrum.backend.service.ProjectService;
 import com.extensivelyscrum.backend.service.UserPrincipalDetailService;
 import com.extensivelyscrum.backend.service.UserService;
 import org.springframework.context.annotation.Bean;
@@ -25,10 +26,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserPrincipalDetailService userPrincipalDetailService;
     private UserService userService;
+
+    ProjectService projectService;
     public SecurityConfiguration(UserPrincipalDetailService userPrincipalDetailService,
+                                 ProjectService projectService,
                                  UserService userService){
         this.userService = userService;
         this.userPrincipalDetailService = userPrincipalDetailService;
+        this.projectService = projectService;
     }
 
     @Override
@@ -47,11 +52,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 // filters:
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.userService))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.projectService, this.userService))
                 // Authorizations:
                 .authorizeRequests()
                 .antMatchers("api/account/create/*").permitAll()
-                .antMatchers("api/offer/add").hasRole("AGENCY")
+                .antMatchers("api/offer/add").
                 .antMatchers("/login").permitAll()
         ;
     }
