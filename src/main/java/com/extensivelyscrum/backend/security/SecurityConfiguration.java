@@ -56,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Authorizations:
                 .authorizeRequests()
                 .antMatchers("api/account/create/*").permitAll()
-                .antMatchers("api/offer/add").
+                .antMatchers("api/offer/add").hasRole("AGENCY")
                 .antMatchers("/login").permitAll()
         ;
     }
