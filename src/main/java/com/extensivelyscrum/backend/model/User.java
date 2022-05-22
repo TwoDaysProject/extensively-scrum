@@ -30,7 +30,7 @@ public class User {
 
     @NotNull(message = "fullName should not be null!")
     @NotEmpty(message = "fullName must not be an empty string")
-    private boolean fullName;
+    private String fullName;
 
     @NotNull(message = "jobTitle should not be null!")
     @NotEmpty(message = "jobTitle must not be an empty string")
@@ -58,11 +58,11 @@ public class User {
         this.password = password;
     }
 
-    public boolean isFullName() {
+    public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(boolean fullName) {
+    public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
