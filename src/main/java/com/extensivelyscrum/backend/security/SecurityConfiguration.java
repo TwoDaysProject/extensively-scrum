@@ -60,6 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.projectService, this.roleService, this.userService))
                 // Authorizations:
                 .authorizeRequests()
+                .antMatchers("/api/account/signup").permitAll()
                 .anyRequest().authenticated()
         ;
     }
