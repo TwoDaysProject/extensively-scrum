@@ -55,6 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
         response.setContentType("application/json");
+        System.out.println("some siht");
         //response.getOutputStream().write(mapper.writeValueAsBytes(Map.of(principal.getAuthorities(),new JwtTokenDto(JwtProperties.TOKEN_PREFIX + jwtToken))));
         response.getOutputStream().write(mapper.writeValueAsBytes(new JwtTokenDto(JwtProperties.TOKEN_PREFIX + jwtToken)));
     }
