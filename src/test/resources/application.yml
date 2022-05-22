@@ -1,0 +1,7 @@
+spring:
+  mail:
+    password: test
+    username: test
+    host: 127.0.0.1
+    port: 3025
+    protocol: smtp

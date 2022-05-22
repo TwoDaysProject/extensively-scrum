@@ -1,6 +1,7 @@
 package com.extensivelyscrum.backend.controllerAdvice;
 
 import com.extensivelyscrum.backend.dto.CreateUserDto;
+import com.extensivelyscrum.backend.dto.SendMailDto;
 import com.extensivelyscrum.backend.model.User;
 import com.extensivelyscrum.backend.service.UserService;
 import org.jboss.logging.annotations.Pos;
@@ -30,6 +31,13 @@ public class UserController {
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<Void> delete(@PathVariable String userId) {
         userService.deleteUserWithId(userId);
+        return new ResponseEntity<>(
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/sendInvitationEmail")
+    public ResponseEntity<Void> sendInvitationEmail(@RequestBody SendMailDto mailDto) {
         return new ResponseEntity<>(
                 HttpStatus.OK
         );
