@@ -25,5 +25,31 @@ public class Role {
     @OneToOne(cascade = CascadeType.ALL)
     private Project project;
 
+    public String getId() {
+        return id;
+    }
 
+    public RoleEnum getRole() {
+        return role;
+    }
+
+    public void setRole(RoleEnum role) {
+        this.role = role;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 }

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.extensivelyscrum.backend.model.Project;
 import com.extensivelyscrum.backend.service.ProjectService;
+import com.extensivelyscrum.backend.service.RoleService;
 import com.extensivelyscrum.backend.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,12 +23,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     UserService userService;
     ProjectService projectService;
 
+    private RoleService roleService;
+
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
                                   ProjectService projectService,
+                                  RoleService roleService,
                                   UserService userService ) {
         super(authenticationManager);
         this.userService = userService;
         this.projectService = projectService;
+        this.roleService = roleService;
     }
 
     @Override
@@ -54,7 +59,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .build()
                     .verify(jwtToken)
                     .getSubject();
-            UserPrincipal principal = new UserPrincipal(userService.getUserWithEmail(email), project, userService);
+            UserPrincipal principal = new UserPrincipal(userService.getUserWithEmail(email), project, userService, roleService);
             return new UsernamePasswordAuthenticationToken(principal.getUsername(), null, principal.getAuthorities());
         }
         return null;

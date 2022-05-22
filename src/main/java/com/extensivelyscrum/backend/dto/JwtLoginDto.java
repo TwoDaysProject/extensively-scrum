@@ -2,7 +2,8 @@ package com.extensivelyscrum.backend.dto;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.shym.backend.security.JwtProperties;
+import com.extensivelyscrum.backend.security.JwtProperties;
+
 
 public class JwtLoginDto {
 
