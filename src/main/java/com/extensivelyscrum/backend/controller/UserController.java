@@ -5,11 +5,9 @@ import com.extensivelyscrum.backend.dto.SendMailDto;
 import com.extensivelyscrum.backend.model.User;
 import com.extensivelyscrum.backend.service.EmailService;
 import com.extensivelyscrum.backend.service.UserService;
-import org.jboss.logging.annotations.Pos;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.Valid;
 

@@ -37,10 +37,9 @@ public class EmailService {
 
     public HttpStatus sendInvitationEmail(String email) {
         // this function will send an email with the link to create new password
-        User user = userService.getUserWithEmail(email);
         sendSimpleEmail(
-                user.getEmail(),
-                "Hi " + user.getFullName() + " you have been inveted to participate in a Extensively-scrum project\n" +
+                email,
+                "Hi " + email + " you have been inveted to participate in a Extensively-scrum project\n" +
                 "Please go to the link: www.google.com\n",
                 "Invitation to Extensively-Scrum project"
         );
