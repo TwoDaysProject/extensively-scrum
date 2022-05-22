@@ -11,18 +11,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @RestController
-@RequestMapping("/api/account")
 public class UserControllerAdvice extends ResponseEntityExceptionHandler {
     UserService userService;
     public UserControllerAdvice(UserService userService) {
         this.userService = userService;
-    }
-
-    @PostMapping("/signup")
-    public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto) {
-        return new ResponseEntity<>(
-                userService.createUser(createUserDto),
-                HttpStatus.CREATED
-        );
     }
 }

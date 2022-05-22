@@ -7,6 +7,7 @@ import com.extensivelyscrum.backend.exception.UserAlreadyExistsException;
 import com.extensivelyscrum.backend.model.User;
 import com.extensivelyscrum.backend.repository.UserRepository;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,10 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException()
         );
+    }
+
+    public void deleteUserWithId(String id) {
+        userRepository.deleteById(id);
     }
 
     public User createUser(CreateUserDto createUserDto) {
