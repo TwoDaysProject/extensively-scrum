@@ -34,7 +34,7 @@ public class UserControllerTest {
     public void testCreateUser() throws Exception {
 
         // *** given
-        CreateUserDto createUserDto = new CreateUserDto("somaaa","so@gmail.com","soma");
+        CreateUserDto createUserDto = new CreateUserDto("somaaa","som@gmail.com","soma");
         Map<String,Object> request = new HashMap<>();
         request.put("fullName",createUserDto.getFullName());
         request.put("email",createUserDto.getEmail());
