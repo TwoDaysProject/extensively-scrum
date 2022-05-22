@@ -1,4 +1,4 @@
-/*package com.extensivelyscrum.backend.controller;
+package com.extensivelyscrum.backend.controller;
 
 import com.extensivelyscrum.backend.dto.NewProjectDto;
 import com.extensivelyscrum.backend.model.Project;
@@ -58,4 +58,4 @@ public class ProjectControllerTest {
         assertEquals(newProject.getDescription(),response.jsonPath().getString("description"));
     }
 
-}*/
+}
