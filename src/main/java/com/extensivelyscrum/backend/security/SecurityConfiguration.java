@@ -63,6 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/account/signup").permitAll()
                 .antMatchers("/api/account/delete/*").permitAll()
                 .antMatchers("/api/account/sendInvitationEmail").permitAll()
+                .antMatchers("/api/project/newProject").permitAll()
                 .anyRequest().authenticated()
         ;
     }
