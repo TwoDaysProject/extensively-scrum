@@ -2,7 +2,6 @@ package com.extensivelyscrum.backend.service;
 
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;

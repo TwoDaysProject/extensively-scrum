@@ -121,6 +121,7 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.1</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -137,7 +138,18 @@
 					<target>16</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://104.248.207.69:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>

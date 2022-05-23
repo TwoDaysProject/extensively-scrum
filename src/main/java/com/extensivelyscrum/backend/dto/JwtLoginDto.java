@@ -15,6 +15,8 @@ public class JwtLoginDto {
         this.password = password;
     }
 
+    public JwtLoginDto () {}
+
     public String getEmail() {
         return email;
     }
