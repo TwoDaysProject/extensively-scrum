@@ -20,7 +20,9 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ext_scrum_db_admin
+          POSTGRES_PASSWORD: ext_scrum_db_pass
+          POSTGRES_DB: ext_scrum_db
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
