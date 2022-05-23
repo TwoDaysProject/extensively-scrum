@@ -1,7 +1,7 @@
 package com.extensivelyscrum.backend.dto;
 
 public record SendMailDto(
-        String toEmail,
+        String email,
         String body,
         String subject
 ) {

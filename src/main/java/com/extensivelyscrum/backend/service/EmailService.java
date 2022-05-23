@@ -46,4 +46,3 @@ public class EmailService {
         return  HttpStatus.OK;
     }
 }
-

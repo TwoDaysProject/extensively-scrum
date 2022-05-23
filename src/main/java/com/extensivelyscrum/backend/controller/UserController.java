@@ -42,7 +42,7 @@ public class UserController {
 
     @PostMapping("/sendInvitationEmail")
     public ResponseEntity<Void> sendInvitationEmail(@RequestBody SendMailDto mailDto) {
-        emailService.sendInvitationEmail(mailDto.toEmail());
+        emailService.sendInvitationEmail(mailDto.email());
         return new ResponseEntity<>(
                 HttpStatus.OK
         );
