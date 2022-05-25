@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/getCurrent")
-    public ResponseEntity<User> sendInvitationEmail(@RequestHeader("Authorization") String jwtToken) {
+    public ResponseEntity<User> getCurrent(@RequestHeader("Authorization") String jwtToken) {
         String email = JwtLoginDto.getEmailFromJwtToken(jwtToken);
         return new ResponseEntity<>(
                 userService.getUserWithEmail(email),
