@@ -45,7 +45,7 @@ class EmailServiceTest {
 
         // *** given
         Map<String,Object> request = new HashMap<>();
-        request.put("toEmail", "test@spring.io");
+        request.put("email", "test@spring.io");
         Response response =
             given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                     contentType("application/json").
