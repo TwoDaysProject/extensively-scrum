@@ -47,7 +47,9 @@ public class BacklogItemService {
         String emailReporter = JwtLoginDto.getEmailFromJwtToken(tokenDto.token());
         backlogItem.setReporter(userService.getUserWithEmail(emailReporter));
         backlogItem.setProject(projectService.getProjectWithId(dto.projectId()));
-        backlogItem.setTag(projectService.getNextTag(backlogItem.getProject()));
+        backlogItem.setTag(projectService.getNextTag(backlogItem.getProject().getName(), backlogItem.getProject().getTagCounter()));
+        backlogItem.getProject().setTagCounter(backlogItem.getProject().getTagCounter() + 1);
+        backlogItem.setProject(projectService.updateProject(backlogItem.getProject()));
 
         if (dto.parentEpicId() != null && BackLogType.valueOf(dto.parentEpicId()) == BackLogType.EPIC)
             backlogItem.setParentEpic(bugService.getEpicWithId(dto.parentEpicId()));
@@ -56,7 +58,8 @@ public class BacklogItemService {
                 backlogItem.getId(),
                 backlogItem.getName(),
                 backlogItem.getDescription(),
-                dto.type());
+                dto.type(),
+                backlogItem.getTag());
     }
 
     public BacklogItem getWithId(String id) {

@@ -29,19 +29,25 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public String getNextTag(Project project) {
+    public String getNextTag(String name, int tagCounter) {
         StringBuilder tagBuilder = new StringBuilder();
-        tagBuilder.append(
-                Arrays.stream(project.getName().split(" |-|_")).
-                        map((String word) -> word.charAt(0))
-        );
-        tagBuilder.append(project.getTagCounter() + 1);
-        project.setTagCounter(project.getTagCounter() + 1);
-        return tagBuilder.toString();
+        Arrays.stream(name.split(" |-|_")).
+                map((String word) -> Character.toUpperCase(word.charAt(0))).
+                forEach(c -> tagBuilder.append(c));
+        tagBuilder.append('-');
+        tagBuilder.append(tagCounter + 1);
+        String res = tagBuilder.toString();
+        System.out.println(tagBuilder);
+        if (res.length() == 1) return name;
+        return res;
     }
 
     public void deleteById(String id) {
         projectRepository.deleteById(id);
+    }
+
+    public Project updateProject(Project project) {
+        return projectRepository.save(project);
     }
 
 }

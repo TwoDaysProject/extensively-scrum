@@ -6,6 +6,7 @@ public record BacklogItemMiniDto (
         String id,
         String name,
         String description,
-        BackLogType type
+        BackLogType type,
+        String tag
 ){
 }
