@@ -103,7 +103,6 @@ public class UserControllerTest {
         Assert.hasText(response2.getBody().prettyPrint(), "Bearer");
 
         // *** clear
-
         delete(CONTEXT_PATH + "/delete/" + response.jsonPath().getString("id"));
     }
 }

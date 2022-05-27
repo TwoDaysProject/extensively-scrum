@@ -8,6 +8,7 @@ import com.extensivelyscrum.backend.enums.RoleEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,61 +27,69 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RoleControllerTest {
+
+
     private final String CONTEXT_PATH = "api/role";
     private ObjectMapper mapper;
-    private Response response, response2, response3;
+    private String email = "maymoun@gmail.com";
+    private String password = "somaya";
+    private String userID;
+    private String jwtToken;
+    private String fullName = "somaya";
+    private String nameProject = "project";
+    private String description = "descrip";
+    private String projectID;
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() throws Exception {
+
         RestAssured.baseURI = "http://127.0.0.1";
         RestAssured.port = 8001;
         mapper = new ObjectMapper();
 
         //create user
-        CreateUserDto createUserDto = new CreateUserDto("somaaa","so@gmail.com","soma");
         Map<String,Object> request = new HashMap<>();
-        request.put("fullName",createUserDto.getFullName());
-        request.put("email",createUserDto.getEmail());
-        request.put("password",createUserDto.getPassword());
-        response = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+        request.put("fullName",fullName);
+        request.put("email",email);
+        request.put("password",password);
+        userID =
+        given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                 contentType("application/json").
                 accept("application/json").
-                body(request).post("api/account/signup").andReturn();
+                body(request).post("api/account/signup").then().extract().response().jsonPath().getString("id");
 
+        System.out.println("thiis" + userID);
         //login user
-        JwtLoginDto jwtLoginDto = new JwtLoginDto(createUserDto.getEmail(),createUserDto.getPassword());
         Map<String,Object> request2 = new HashMap<>();
-        request2.put("email",jwtLoginDto.getEmail());
-        request2.put("password",jwtLoginDto.getPassword());
-        response2 =
+        request2.put("email",email);
+        request2.put("password",password);
+        jwtToken =
                 given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                         contentType("application/json").
                         accept("application/json").
-                        body(request2).post("/login").andReturn();
+                        body(request2).post("/login").then().extract().response().jsonPath().getString("token");
+        System.out.println("here" + jwtToken);
         //create project
-        NewProjectDto newProject = new NewProjectDto("last","last");
         Map<String,Object> request3 = new HashMap<>();
-        request3.put("name",newProject.getName());
-        request3.put("description",newProject.getDescription());
-        response3 = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
-                        header("Authorization",response2.body().jsonPath().getString("token")).
+        request3.put("name",nameProject);
+        request3.put("description",description);
+        projectID =
+        given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                         contentType("application/json").
                         accept("application/json").
-                        body(request3).post("api/project/newProject").then().extract().response();
+                        body(request3).post("api/project/newProject").then().extract().response().jsonPath().getString("id");
     }
 
     @Test
     public void testAddProjectMember() throws Exception {
 
         // *** given
-        System.out.println("");
-        AddProjectMemberDto addProjectMemberDto = new AddProjectMemberDto(response3.jsonPath().getString("id"),"soma@gmail.com", RoleEnum.SCRUM_MASTER);
         Map<String,Object> request4 = new HashMap<>();
-        request4.put("idProject",addProjectMemberDto.idProject());
-        request4.put("UserEmail",addProjectMemberDto.UserEmail());
-        request4.put("role",addProjectMemberDto.role());
+        request4.put("idProject",projectID);
+        request4.put("UserEmail",email);
+        request4.put("role",RoleEnum.SCRUM_MASTER);
         given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
-                        header("Authorization",response2.body().jsonPath().getString("token")).
+                        header("Authorization",jwtToken).
                         contentType("application/json").
                         accept("application/json").
                         body(request4).
@@ -88,14 +97,12 @@ public class RoleControllerTest {
         // *** when
         when().
                         post(CONTEXT_PATH + "/addProjectMember").
-
         // *** then
         then().
                         log().all().
-                        statusCode(200).
-                        contentType("application/json");
+                        statusCode(200);
 
         // *** clear
-        delete(CONTEXT_PATH + "/delete/" + response.jsonPath().getString("id"));
+        delete(CONTEXT_PATH + "/delete/" + userID);
     }
 }
