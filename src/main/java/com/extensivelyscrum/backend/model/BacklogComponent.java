@@ -1,11 +1,23 @@
 package com.extensivelyscrum.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
 public abstract class BacklogComponent {
+
+    @NotNull(message = "reporter must not be null")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "REPORTER_ID")
+    private User reporter;
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -23,4 +35,6 @@ public abstract class BacklogComponent {
     private Project project;
 
     private String tag;
+
+    public BacklogComponent() {}
 }

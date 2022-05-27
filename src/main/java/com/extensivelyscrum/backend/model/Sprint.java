@@ -4,17 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
-@Entity
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-public class Project {
+@Entity
+public class Sprint{
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -27,14 +27,16 @@ public class Project {
     @NotNull(message = "description is required")
     private String description;
 
-    @Column(name = "tag_counter", nullable = true)
-    private int tagCounter;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId")
+    private Project project;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<BacklogItem> projectItems;
+    private Date startDate;
 
-    public Project() {
+    private Date endDate;
 
-    }
+    @OneToMany(mappedBy="sprint", cascade={CascadeType.ALL})
+    private List<Ticket> ticketList;
 
+    public Sprint() {}
 }

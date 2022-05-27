@@ -9,17 +9,22 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@Entity
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
 public abstract class BacklogItem extends BacklogComponent {
 
     private Date startDate;
 
     private Date endDate;
 
+    @OneToMany(mappedBy="backlogItem", cascade={CascadeType.ALL})
     private List<Ticket> ticketList;
-    public BacklogItem() {}
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EPIC_ID")
+    private Epic parentEpic;
+
+    public BacklogItem() {}
 }

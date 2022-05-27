@@ -38,9 +38,9 @@ public class UserControllerTest {
         // *** given
         CreateUserDto createUserDto = new CreateUserDto("somaaa","som@gmail.com","soma");
         Map<String,Object> request = new HashMap<>();
-        request.put("fullName",createUserDto.getFullName());
-        request.put("email",createUserDto.getEmail());
-        request.put("password",createUserDto.getPassword());
+        request.put("fullName",createUserDto.fullName());
+        request.put("email",createUserDto.email());
+        request.put("password",createUserDto.password());
         Response response =
                 given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                         contentType("application/json").
@@ -58,8 +58,8 @@ public class UserControllerTest {
                         contentType("application/json").
                         extract().response();
         assertThat(response).isNotNull();
-        assertEquals(createUserDto.getFullName(),response.jsonPath().getString("fullName"));
-        assertEquals(createUserDto.getEmail(),response.jsonPath().getString("email"));
+        assertEquals(createUserDto.fullName(),response.jsonPath().getString("fullName"));
+        assertEquals(createUserDto.email(),response.jsonPath().getString("email"));
 
         // *** clear
 
@@ -72,17 +72,17 @@ public class UserControllerTest {
         // *** given
         CreateUserDto createUserDto = new CreateUserDto("somaaa","so@gmail.com","soma");
         Map<String,Object> request = new HashMap<>();
-        request.put("fullName",createUserDto.getFullName());
-        request.put("email",createUserDto.getEmail());
-        request.put("password",createUserDto.getPassword());
+        request.put("fullName",createUserDto.fullName());
+        request.put("email",createUserDto.email());
+        request.put("password",createUserDto.password());
         Response response = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                 contentType("application/json").
                 accept("application/json").
                 body(request).post(CONTEXT_PATH + "/signup").andReturn();
-        JwtLoginDto jwtLoginDto = new JwtLoginDto(createUserDto.getEmail(),createUserDto.getPassword());
+        JwtLoginDto jwtLoginDto = new JwtLoginDto(createUserDto.email(),createUserDto.password());
         Map<String,Object> request2 = new HashMap<>();
-        request2.put("email",jwtLoginDto.getEmail());
-        request2.put("password",jwtLoginDto.getPassword());
+        request2.put("email",jwtLoginDto.email());
+        request2.put("password",jwtLoginDto.password());
 
         Response response2 =
         given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).

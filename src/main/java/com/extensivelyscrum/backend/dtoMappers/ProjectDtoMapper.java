@@ -5,11 +5,9 @@ import com.extensivelyscrum.backend.model.Project;
 
 public class ProjectDtoMapper {
 
-    public static Project  createProjectDtoMapper(NewProjectDto newProjectDto){
-        Project project = new Project();
+    public static Project createProjectDtoMapper(NewProjectDto newProjectDto, Project project){
         project.setName(newProjectDto.getName());
         project.setDescription(newProjectDto.getDescription());
-
         return project;
     }
 }
