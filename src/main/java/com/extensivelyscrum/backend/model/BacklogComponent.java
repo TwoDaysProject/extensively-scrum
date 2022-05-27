@@ -1,19 +1,11 @@
 package com.extensivelyscrum.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-public class Project {
+public abstract class BacklogComponent {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -26,13 +18,9 @@ public class Project {
     @NotNull(message = "description is required")
     private String description;
 
-    private int tagCounter;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId")
+    private Project project;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<BacklogItem> projectItems;
-
-    public Project() {
-
-    }
-
+    private String tag;
 }
