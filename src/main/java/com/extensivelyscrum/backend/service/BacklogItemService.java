@@ -12,6 +12,7 @@ import com.extensivelyscrum.backend.factories.backlogItemFactory.EpicFactory;
 import com.extensivelyscrum.backend.factories.backlogItemFactory.StoryFactory;
 import com.extensivelyscrum.backend.model.BacklogItem;
 import com.extensivelyscrum.backend.repository.BacklogItemRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +32,7 @@ public class BacklogItemService {
         this.bugService = bugService;
     }
 
-    public BacklogItemMiniDto createBacklogItem(CreateBacklogItemDto dto, JwtTokenDto tokenDto) {
+    public BacklogItemMiniDto createBacklogItem(@NotNull CreateBacklogItemDto dto, JwtTokenDto tokenDto) {
 
         BacklogItemFactory backlogItemFactory;
 
@@ -48,7 +49,7 @@ public class BacklogItemService {
         backlogItem.setProject(projectService.getProjectWithId(dto.projectId()));
         backlogItem.setTag(projectService.getNextTag(backlogItem.getProject()));
 
-        if (BackLogType.valueOf(dto.parentEpicId()) == BackLogType.EPIC)
+        if (dto.parentEpicId() != null && BackLogType.valueOf(dto.parentEpicId()) == BackLogType.EPIC)
             backlogItem.setParentEpic(bugService.getEpicWithId(dto.parentEpicId()));
         backlogItem = backlogItemRepository.save(backlogItem);
         return new BacklogItemMiniDto(
@@ -60,5 +61,9 @@ public class BacklogItemService {
 
     public BacklogItem getWithId(String id) {
         return backlogItemRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    }
+
+    public void deleteWithId(String id) {
+        backlogItemRepository.deleteById(id);
     }
 }

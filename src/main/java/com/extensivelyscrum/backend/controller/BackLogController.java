@@ -39,4 +39,12 @@ public class BackLogController {
         );
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteBacklogItem(@PathVariable String id) {
+        backlogItemService.deleteWithId(id);
+        return new ResponseEntity<>(
+                HttpStatus.CREATED
+        );
+    }
+
 }

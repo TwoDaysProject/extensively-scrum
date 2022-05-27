@@ -1,6 +1,7 @@
 package com.extensivelyscrum.backend.service;
 
 
+import com.extensivelyscrum.backend.dto.AddProjectMemberDto;
 import com.extensivelyscrum.backend.enums.RoleEnum;
 import com.extensivelyscrum.backend.model.Project;
 import com.extensivelyscrum.backend.model.Role;
@@ -43,13 +44,13 @@ public class RoleService {
         );
     }
 
-    public Role addProjectMember(String userEmail, String projectId, RoleEnum roleEnum) {
-        Project project = projectService.getProjectWithId(projectId);
-        User user = userService.getUserWithEmail(userEmail);
+    public Role addProjectMember(AddProjectMemberDto dto) {
+        Project project = projectService.getProjectWithId(dto.idProject());
+        User user = userService.getUserWithEmail(dto.UserEmail());
         Role role = new Role();
         role.setUser(user);
         role.setProject(project);
-        role.setRole(roleEnum);
+        role.setRole(dto.role());
         Role result= roleRepository.save(role);
         return result;
     }

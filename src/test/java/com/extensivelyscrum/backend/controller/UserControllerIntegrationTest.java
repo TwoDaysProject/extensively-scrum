@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserControllerTest {
+public class UserControllerIntegrationTest {
 
     private final String CONTEXT_PATH = "api/account";
     private ObjectMapper mapper;
@@ -36,7 +36,7 @@ public class UserControllerTest {
     public void testCreateUser() throws Exception {
 
         // *** given
-        CreateUserDto createUserDto = new CreateUserDto("somaaa","som@gmail.com","soma");
+        CreateUserDto createUserDto = new CreateUserDto("sosssmaaa","sofllm@gmail.com","soma");
         Map<String,Object> request = new HashMap<>();
         request.put("fullName",createUserDto.fullName());
         request.put("email",createUserDto.email());
@@ -57,12 +57,12 @@ public class UserControllerTest {
                         statusCode(201).
                         contentType("application/json").
                         extract().response();
+
         assertThat(response).isNotNull();
         assertEquals(createUserDto.fullName(),response.jsonPath().getString("fullName"));
         assertEquals(createUserDto.email(),response.jsonPath().getString("email"));
 
         // *** clear
-
         delete(CONTEXT_PATH + "/delete/" + response.jsonPath().getString("id"));
 
     }

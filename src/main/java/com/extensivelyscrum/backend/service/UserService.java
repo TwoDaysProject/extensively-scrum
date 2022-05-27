@@ -30,8 +30,8 @@ public class UserService {
     }
 
     public User createUser(CreateUserDto createUserDto) {
-        if(userRepository.existsByEmail(createUserDto.getEmail())) throw new UserAlreadyExistsException("User exists Already!");
-        if(!EmailValidator.getInstance().isValid(createUserDto.getEmail())) throw new InvalidEmailFormatException("Invalid Email!");
+        if(userRepository.existsByEmail(createUserDto.email())) throw new UserAlreadyExistsException("User exists Already!");
+        if(!EmailValidator.getInstance().isValid(createUserDto.email())) throw new InvalidEmailFormatException("Invalid Email!");
         User user = UserDtoMapper.createUserDtoMapper(createUserDto);
         return userRepository.save(user);
     }

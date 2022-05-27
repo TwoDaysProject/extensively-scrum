@@ -9,9 +9,9 @@ import java.util.ArrayList;
 public class UserDtoMapper {
     public static User createUserDtoMapper(CreateUserDto createUserDto) {
         User user = new User();
-        user.setFullName(createUserDto.getFullName());
-        user.setEmail(createUserDto.getEmail());
-        user.setPassword(SecurityConfiguration.passwordEncoder().encode(createUserDto.getPassword()));
+        user.setFullName(createUserDto.fullName());
+        user.setEmail(createUserDto.email());
+        user.setPassword(SecurityConfiguration.passwordEncoder().encode(createUserDto.password()));
         return user;
     }
 }

@@ -1,9 +1,5 @@
 package com.extensivelyscrum.backend.controller;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
-
 import com.extensivelyscrum.backend.dto.AddProjectMemberDto;
 import com.extensivelyscrum.backend.dto.GetRoleDto;
 import com.extensivelyscrum.backend.dto.JwtLoginDto;
@@ -27,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class RoleController {
 
     private RoleService roleService;
-    private RoleRepository roleRepository;
 
     @GetMapping("/getRoles")
     public ResponseEntity<List<Role>> getCurrentUserRolesInProject(@RequestBody GetRoleDto dto,
@@ -39,18 +34,10 @@ public class RoleController {
         );
     }
 
-//    @PostMapping("/role")
-//    ResponseEntity<Role> createOrder(@Validated @RequestBody Role role) throws URISyntaxException{
-//        Role result= roleRepository.save(role);
-//        return ResponseEntity.created(new URI("/api/role" + result.getId())).body(result);
-//    }
-
-    @PutMapping("/addProjectMember")
-    public ResponseEntity<Role> addProjectMembers(@RequestBody AddProjectMemberDto addProjectMemberDto) {
+    @PostMapping("/addProjectMember")
+    public ResponseEntity<Role> addProjectMembers(@RequestBody AddProjectMemberDto dto) {
         return new ResponseEntity<>(
-                roleService.addProjectMember(addProjectMemberDto.UserEmail(),
-                        addProjectMemberDto.idProject(),
-                        addProjectMemberDto.role()),
+                roleService.addProjectMember(dto),
                 HttpStatus.OK
         );
     }

@@ -53,7 +53,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private Authentication getEmailPasswordAuthentication(String jwtToken, String projectId) throws Throwable {
         if (jwtToken != null) {
-            Project project = projectService.getProjectWithId(projectId);
+            Project project = null;
+            if (projectId != null) project = projectService.getProjectWithId(projectId);
             jwtToken = jwtToken.replace(JwtProperties.TOKEN_PREFIX, "");
             String email = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET.getBytes()))
                     .build()

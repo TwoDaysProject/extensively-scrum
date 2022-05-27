@@ -1,36 +1,36 @@
 package com.extensivelyscrum.backend.controller;
 
-import com.extensivelyscrum.backend.dto.CreateUserDto;
 import com.extensivelyscrum.backend.dto.NewProjectDto;
 import com.extensivelyscrum.backend.model.Project;
-import com.extensivelyscrum.backend.model.User;
-import com.extensivelyscrum.backend.repository.ProjcetRepository;
 import com.extensivelyscrum.backend.service.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/project")
+@AllArgsConstructor
 public class ProjectController {
 
-
-    public ProjectController(ProjectService projectService) {
-        this.projectService = projectService;
-    }
-
-    @Autowired
     ProjectService projectService;
 
-    @PostMapping("/newProject")
-    public ResponseEntity<Project> newProject(@RequestBody NewProjectDto newproject){
-
+    @PostMapping("/create")
+    public ResponseEntity<Project> createProject(@RequestBody NewProjectDto newProject,
+                                              @RequestHeader("Authorization") String jwtToken){
         return new ResponseEntity<>(
-                projectService.createProject(newproject),
+                projectService.createProject(newProject),
                 HttpStatus.CREATED
         );
-
     }
+
+    @DeleteMapping("/deleteProject/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable String id) {
+        projectService.deleteById(id);
+        return new ResponseEntity<>(
+                HttpStatus.OK
+        );
+    }
+
+
 }

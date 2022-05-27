@@ -1,17 +1,9 @@
 package com.extensivelyscrum.backend.controller;
 
-import com.extensivelyscrum.backend.dto.AddProjectMemberDto;
-import com.extensivelyscrum.backend.dto.CreateUserDto;
-import com.extensivelyscrum.backend.dto.JwtLoginDto;
-import com.extensivelyscrum.backend.dto.NewProjectDto;
 import com.extensivelyscrum.backend.enums.RoleEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
@@ -26,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RoleControllerTest {
+public class RoleControllerIntegrationTest {
 
 
     private final String CONTEXT_PATH = "api/role";
     private ObjectMapper mapper;
-    private String email = "maymoun@gmail.com";
+    private String email = "maymssssoun@gmail.com";
     private String password = "somaya";
     private String userID;
     private String jwtToken;
@@ -68,7 +60,6 @@ public class RoleControllerTest {
                         contentType("application/json").
                         accept("application/json").
                         body(request2).post("/login").then().extract().response().jsonPath().getString("token");
-        System.out.println("here" + jwtToken);
         //create project
         Map<String,Object> request3 = new HashMap<>();
         request3.put("name",nameProject);
@@ -76,8 +67,15 @@ public class RoleControllerTest {
         projectID =
         given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                         contentType("application/json").
+                        header("Authorization",jwtToken).
                         accept("application/json").
-                        body(request3).post("api/project/newProject").then().extract().response().jsonPath().getString("id");
+                        body(request3).post("api/project/create").then().extract().response().jsonPath().getString("id");
+    }
+
+    @AfterAll
+    public void clear() {
+        delete("api/account/delete/" + userID);
+        delete("api/project/deleteProject" + projectID);
     }
 
     @Test
@@ -102,7 +100,5 @@ public class RoleControllerTest {
                         log().all().
                         statusCode(200);
 
-        // *** clear
-        delete(CONTEXT_PATH + "/delete/" + userID);
     }
 }

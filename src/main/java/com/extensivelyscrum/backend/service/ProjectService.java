@@ -40,4 +40,8 @@ public class ProjectService {
         return tagBuilder.toString();
     }
 
+    public void deleteById(String id) {
+        projectRepository.deleteById(id);
+    }
+
 }
