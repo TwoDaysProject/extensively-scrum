@@ -34,11 +34,13 @@ public class ProjectService {
         Arrays.stream(name.split(" |-|_")).
                 map((String word) -> Character.toUpperCase(word.charAt(0))).
                 forEach(c -> tagBuilder.append(c));
+        if (tagBuilder.toString().length() == 1) {
+            return name.toUpperCase() + '-' + (tagCounter + 1);
+        }
         tagBuilder.append('-');
         tagBuilder.append(tagCounter + 1);
         String res = tagBuilder.toString();
         System.out.println(tagBuilder);
-        if (res.length() == 1) return name;
         return res;
     }
 

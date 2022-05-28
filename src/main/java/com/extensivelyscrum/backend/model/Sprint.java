@@ -35,6 +35,8 @@ public class Sprint{
 
     private Date endDate;
 
+    private boolean activated;
+
     @OneToMany(mappedBy="sprint", cascade={CascadeType.ALL})
     private List<Ticket> ticketList;
 

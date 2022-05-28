@@ -1,6 +1,6 @@
 package com.extensivelyscrum.backend.controller;
 
-import com.extensivelyscrum.backend.dto.BacklogItemMiniDto;
+import com.extensivelyscrum.backend.dto.ListBacklogItemsDto;
 import com.extensivelyscrum.backend.dto.CreateBacklogItemDto;
 import com.extensivelyscrum.backend.dto.JwtTokenDto;
 import com.extensivelyscrum.backend.model.BacklogItem;
@@ -20,9 +20,9 @@ public class BackLogController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<BacklogItemMiniDto> createBacklogItem(@RequestBody CreateBacklogItemDto dto,
-                                                                @RequestHeader("Authorization") JwtTokenDto tokenDto) {
-        BacklogItemMiniDto dto1 = backlogItemService.createBacklogItem(dto, tokenDto);
+    public ResponseEntity<ListBacklogItemsDto> createBacklogItem(@RequestBody CreateBacklogItemDto dto,
+                                                                 @RequestHeader("Authorization") JwtTokenDto tokenDto) {
+        ListBacklogItemsDto dto1 = backlogItemService.createBacklogItem(dto, tokenDto);
         return new ResponseEntity<>(
                 dto1,
                 HttpStatus.CREATED
@@ -43,7 +43,7 @@ public class BackLogController {
     public ResponseEntity<Void> deleteBacklogItem(@PathVariable String id) {
         backlogItemService.deleteWithId(id);
         return new ResponseEntity<>(
-                HttpStatus.CREATED
+                HttpStatus.OK
         );
     }
 

@@ -1,6 +1,6 @@
 package com.extensivelyscrum.backend.service;
 
-import com.extensivelyscrum.backend.dto.BacklogItemMiniDto;
+import com.extensivelyscrum.backend.dto.ListBacklogItemsDto;
 import com.extensivelyscrum.backend.dto.CreateBacklogItemDto;
 import com.extensivelyscrum.backend.dto.JwtLoginDto;
 import com.extensivelyscrum.backend.dto.JwtTokenDto;
@@ -32,7 +32,7 @@ public class BacklogItemService {
         this.bugService = bugService;
     }
 
-    public BacklogItemMiniDto createBacklogItem(@NotNull CreateBacklogItemDto dto, JwtTokenDto tokenDto) {
+    public ListBacklogItemsDto createBacklogItem(@NotNull CreateBacklogItemDto dto, JwtTokenDto tokenDto) {
 
         BacklogItemFactory backlogItemFactory;
 
@@ -54,7 +54,7 @@ public class BacklogItemService {
         if (dto.parentEpicId() != null && BackLogType.valueOf(dto.parentEpicId()) == BackLogType.EPIC)
             backlogItem.setParentEpic(bugService.getEpicWithId(dto.parentEpicId()));
         backlogItem = backlogItemRepository.save(backlogItem);
-        return new BacklogItemMiniDto(
+        return new ListBacklogItemsDto(
                 backlogItem.getId(),
                 backlogItem.getName(),
                 backlogItem.getDescription(),

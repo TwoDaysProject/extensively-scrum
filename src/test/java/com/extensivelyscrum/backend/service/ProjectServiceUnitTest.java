@@ -27,13 +27,16 @@ class ProjectServiceUnitTest {
     public void testGetNextTag() throws Exception { // Unit test of the function getNextTag
 
         // given:
-        String projectName = "test something-hhh";
+        String projectName1 = "test something-hhh";
+        String projectName2 = "test";
         int tagCounter = 0;
 
         // when
-        String tag = projectService.getNextTag(projectName, tagCounter);
+        String tag1 = projectService.getNextTag(projectName1, tagCounter);
+        String tag2 = projectService.getNextTag(projectName2, tagCounter + 1);
 
         // then
-        assertEquals("TSH-1", tag);
+        assertEquals("TSH-1", tag1);
+        assertEquals("TEST-2", tag2);
     }
 }

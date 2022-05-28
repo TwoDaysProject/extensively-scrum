@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class UserControllerAdvice extends ResponseEntityExceptionHandler {
     UserService userService;
     public UserControllerAdvice(UserService userService) {
+
         this.userService = userService;
     }
 }
