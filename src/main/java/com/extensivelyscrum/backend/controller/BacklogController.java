@@ -10,10 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/backlog")
 @AllArgsConstructor
-public class BackLogController {
+public class BacklogController {
 
     BacklogItemService backlogItemService;
 
@@ -41,6 +43,14 @@ public class BackLogController {
     public ResponseEntity<Void> deleteBacklogItem(@PathVariable String id) {
         backlogItemService.deleteWithId(id);
         return new ResponseEntity<>(
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/list/{projectId}")
+    public ResponseEntity<List<ListBacklogItemsDto>> listBacklogItems(@PathVariable String projectId) {
+        return new ResponseEntity<>(
+                backlogItemService.listBacklogItems(projectId),
                 HttpStatus.OK
         );
     }

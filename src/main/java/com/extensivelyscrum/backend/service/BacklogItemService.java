@@ -11,26 +11,25 @@ import com.extensivelyscrum.backend.factories.backlogItemFactory.BugFactory;
 import com.extensivelyscrum.backend.factories.backlogItemFactory.EpicFactory;
 import com.extensivelyscrum.backend.factories.backlogItemFactory.StoryFactory;
 import com.extensivelyscrum.backend.model.BacklogItem;
+import com.extensivelyscrum.backend.model.Project;
+import com.extensivelyscrum.backend.model.Role;
+import com.extensivelyscrum.backend.model.User;
 import com.extensivelyscrum.backend.repository.BacklogItemRepository;
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@AllArgsConstructor
 public class BacklogItemService {
     private final BacklogItemRepository backlogItemRepository;
     private final UserService userService;
     private final ProjectService projectService;
     private final EpicService bugService;
 
-    public BacklogItemService(BacklogItemRepository backlogItemRepository,
-                              UserService userService,
-                              ProjectService projectService,
-                              EpicService bugService) {
-        this.backlogItemRepository = backlogItemRepository;
-        this.userService = userService;
-        this.projectService = projectService;
-        this.bugService = bugService;
-    }
+    private final RoleService roleService;
 
     public ListBacklogItemsDto createBacklogItem(@NotNull CreateBacklogItemDto dto, JwtTokenDto tokenDto) {
 
@@ -43,6 +42,7 @@ public class BacklogItemService {
             default -> throw new RuntimeException();
         }
         BacklogItem backlogItem = backlogItemFactory.createBacklogItem();
+        backlogItem.setType(dto.type());
         BacklogItemDtoMapper.createBacklogItemDtoMapper(dto, backlogItem);
         String emailReporter = JwtLoginDto.getEmailFromJwtToken(tokenDto.token());
         backlogItem.setReporter(userService.getUserWithEmail(emailReporter));
@@ -60,6 +60,27 @@ public class BacklogItemService {
                 backlogItem.getDescription(),
                 dto.type(),
                 backlogItem.getTag());
+    }
+
+    /*public List<ListBacklogItemsDto> listBacklogItems(JwtTokenDto tokenDto) {
+        String email = JwtLoginDto.getEmailFromJwtToken(tokenDto.token());
+        User user = userService.getUserWithEmail(email);
+        List<Role> roleList = roleService.getUserRoles(user);
+        List<Projects>
+        return
+    }*/
+
+    public List<ListBacklogItemsDto> listBacklogItems(String projectId) {
+        Project project = projectService.getProjectWithId(projectId);
+        return backlogItemRepository.findAllByProject(project).stream().map(
+                (BacklogItem item) -> new ListBacklogItemsDto(
+                        item.getId(),
+                        item.getName(),
+                        item.getDescription(),
+                        item.getType(),
+                        item.getTag()
+                )
+        ).toList();
     }
 
     public BacklogItem getWithId(String id) {

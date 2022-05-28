@@ -1,6 +1,5 @@
 package com.extensivelyscrum.backend.controller;
 
-import com.extensivelyscrum.backend.enums.BackLogType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SprintControllerIntegrationTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(BackLogController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BacklogController.class);
     private final String CONTEXT_PATH = "api/sprint";
     private ObjectMapper mapper;
     private String email = "test5@gmail.com";

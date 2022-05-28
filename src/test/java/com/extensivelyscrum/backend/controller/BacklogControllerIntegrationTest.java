@@ -1,5 +1,6 @@
 package com.extensivelyscrum.backend.controller;
 
+import com.extensivelyscrum.backend.dto.ListBacklogItemsDto;
 import com.extensivelyscrum.backend.enums.BackLogType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.delete;
@@ -26,9 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
-class BackLogControllerIntegrationTest {
+class BacklogControllerIntegrationTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(BackLogController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BacklogController.class);
     private final String CONTEXT_PATH = "api/backlog";
     private ObjectMapper mapper;
     private String email = "test125@gmail.com";
@@ -93,37 +95,81 @@ class BackLogControllerIntegrationTest {
     @Test
     public void testCreateBackLogItem() {
 
-        // ** given
-        Map<String,Object> request = new HashMap<>();
-        request.put("projectId",projectID);
-        request.put("type", BackLogType.STORY);
-        request.put("name", "new story");
-        request.put("description", "a new story hhh");
+        String backlogId = null;
 
-        Response response = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
-                header("Authorization",jwtToken).
-                contentType("application/json").
-                accept("application/json").
-                body(request).
+        try {
+            // ** given
+            Map<String,Object> request = new HashMap<>();
+            request.put("projectId",projectID);
+            request.put("type", BackLogType.STORY);
+            request.put("name", "new story");
+            request.put("description", "a new story hhh");
 
-        // *** when
-                        when().
-                post(CONTEXT_PATH + "/create").
+            Response response = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+                    header("Authorization",jwtToken).
+                    contentType("application/json").
+                    accept("application/json").
+                    body(request).
+                    // *** when
+                            when().
+                    post(CONTEXT_PATH + "/create").
 
-        // *** then
-                        then().
-                log().all().
-                statusCode(201).
-                extract().response();
+                    // *** then
+                            then().
+                    log().all().
+                    statusCode(201).
+                    extract().response();
 
-        logger.warn(response.prettyPrint());
+            backlogId = response.jsonPath().getString("id");
 
-        assertEquals("new story", response.jsonPath().getString("name"));
-        assertEquals("a new story hhh", response.jsonPath().getString("description"));
-        assertEquals(BackLogType.STORY, BackLogType.valueOf(response.jsonPath().getString("type")));
+            assertEquals("new story", response.jsonPath().getString("name"));
+            assertEquals("a new story hhh", response.jsonPath().getString("description"));
+            assertEquals(BackLogType.STORY, BackLogType.valueOf(response.jsonPath().getString("type")));
+        } finally {
+            // clear backlog item:
+            delete(CONTEXT_PATH + "/delete/" + backlogId);
+        }
+    }
 
-        // clear backlog item:
+    @Test
+    public void testListBacklogItems() {
+        String backlogId = null;
+        try {
+            // ** given
+            Map<String,Object> request = new HashMap<>();
+            request.put("projectId",projectID);
+            request.put("type", BackLogType.STORY);
+            request.put("name", "new story");
+            request.put("description", "a new story hhh");
 
-        delete(CONTEXT_PATH + "/delete/" + response.jsonPath().getString("id"));
+            backlogId = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+                    header("Authorization",jwtToken).
+                    contentType("application/json").
+                    accept("application/json").
+                    body(request).
+                    when().
+                    post(CONTEXT_PATH + "/create").
+                    then().
+                    extract().response().jsonPath().getString("id");
+
+            Response response = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+                    header("Authorization",jwtToken).
+                    contentType("application/json").
+                    accept("application/json").
+                    when().
+                    get(CONTEXT_PATH + "/list/" + projectID).
+                    then().
+                    statusCode(200).
+                    extract().response();
+
+            List<HashMap> listBacklogItemsDtos = response.jsonPath().getList("");
+            assertEquals(1, listBacklogItemsDtos.size());
+            assertEquals("new story", listBacklogItemsDtos.get(0).get("name"));
+            assertEquals("a new story hhh", listBacklogItemsDtos.get(0).get("description"));
+            assertEquals(BackLogType.STORY, BackLogType.valueOf((String) listBacklogItemsDtos.get(0).get("type")));
+        } finally {
+            // clear backlog item:
+            delete(CONTEXT_PATH + "/delete/" + backlogId);
+        }
     }
 }

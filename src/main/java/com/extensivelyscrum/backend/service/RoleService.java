@@ -54,4 +54,8 @@ public class RoleService {
         Role result= roleRepository.save(role);
         return result;
     }
+
+    public List<Role> getUserRoles(User user) {
+        return roleRepository.findAllByUser(user);
+    }
 }

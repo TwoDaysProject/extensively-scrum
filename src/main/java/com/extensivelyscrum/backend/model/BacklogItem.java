@@ -1,6 +1,7 @@
 package com.extensivelyscrum.backend.model;
 
 
+import com.extensivelyscrum.backend.enums.BackLogType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,8 @@ public abstract class BacklogItem extends BacklogComponent {
     private Epic parentEpic;
 
     private int storyPoints;
+
+    private BackLogType type;
 
     public BacklogItem() {}
 }
