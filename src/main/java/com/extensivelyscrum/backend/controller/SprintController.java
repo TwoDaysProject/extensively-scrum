@@ -30,8 +30,16 @@ public class SprintController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteBacklogItem(@PathVariable String id) {
+    public ResponseEntity<Void> deleteSprint(@PathVariable String id) {
         sprintService.deleteWithId(id);
+        return new ResponseEntity<>(
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/listSprints/{projectId}")
+    public ResponseEntity<Void> listSprints(@PathVariable String projectId) {
+        sprintService.listSprints(projectId);
         return new ResponseEntity<>(
                 HttpStatus.OK
         );

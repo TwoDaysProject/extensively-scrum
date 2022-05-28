@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 @Getter
@@ -37,6 +39,10 @@ public class SprintService {
 
     public void deleteWithId(String id) {
         sprintRepository.deleteById(id);
+    }
+
+    public List<Sprint> listSprints(String projectId) {
+        return sprintRepository.findAllByProject(projectService.getProjectWithId(projectId));
     }
 
 }
