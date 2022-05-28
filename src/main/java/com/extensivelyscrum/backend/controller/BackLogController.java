@@ -5,19 +5,17 @@ import com.extensivelyscrum.backend.dto.CreateBacklogItemDto;
 import com.extensivelyscrum.backend.dto.JwtTokenDto;
 import com.extensivelyscrum.backend.model.BacklogItem;
 import com.extensivelyscrum.backend.service.BacklogItemService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/backlog")
+@AllArgsConstructor
 public class BackLogController {
 
     BacklogItemService backlogItemService;
-
-    public BackLogController(BacklogItemService backlogItemService) {
-        this.backlogItemService = backlogItemService;
-    }
 
     @PostMapping("/create")
     public ResponseEntity<ListBacklogItemsDto> createBacklogItem(@RequestBody CreateBacklogItemDto dto,

@@ -62,12 +62,14 @@ public class ProjectControllerIntegrationTest {
                         accept("application/json").
                         body(request2).post("/login").then().extract().response().jsonPath().getString("token");
         System.out.println("here" + jwtToken);
+
     }
 
     @AfterAll
     public void clear() {
-        delete(CONTEXT_PATH + "/delete/" + userID);
+        delete("api/account/delete/" + userID);
     }
+
 
     @Test
     public void testNewProject () throws  Exception{

@@ -18,16 +18,12 @@ public class Ticket extends BacklogComponent{
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumn(name = "ASSIGNEE_ID")
     private User assignee;
-
     private Status status;
-
     @ManyToOne(cascade= {CascadeType.ALL})
     @JoinColumn(name = "SPRINT_ID")
     private Sprint sprint;
-
     @ManyToOne(cascade= {CascadeType.ALL})
     @JoinColumn(name = "BACKLOG_ITEM_ID")
     private BacklogItem backlogItem;
-
     public Ticket() {}
 }
