@@ -2,9 +2,11 @@ package com.extensivelyscrum.backend.dto;
 
 import com.extensivelyscrum.backend.enums.RoleEnum;
 
-public record AddProjectMemberDto(
+public record ListRoleDto(
         String projectId,
-        String email,
+        String projectName,
+        String userId,
+        String userName,
         RoleEnum role
 ) {
 }

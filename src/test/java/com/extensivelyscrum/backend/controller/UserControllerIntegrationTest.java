@@ -36,7 +36,7 @@ public class UserControllerIntegrationTest {
     public void testCreateUser() throws Exception {
 
         // *** given
-        CreateUserDto createUserDto = new CreateUserDto("sosssmaaa","sofllm@gmail.com","soma");
+        CreateUserDto createUserDto = new CreateUserDto("sosssmaaa","ssslm@gmail.com","soma");
         Map<String,Object> request = new HashMap<>();
         request.put("fullName",createUserDto.fullName());
         request.put("email",createUserDto.email());
@@ -63,7 +63,7 @@ public class UserControllerIntegrationTest {
         assertEquals(createUserDto.email(),response.jsonPath().getString("email"));
 
         // *** clear
-        delete(CONTEXT_PATH + "/delete/" + response.jsonPath().getString("id"));
+        delete(CONTEXT_PATH + "/delete/" + createUserDto.email());
 
     }
 
@@ -103,6 +103,6 @@ public class UserControllerIntegrationTest {
         Assert.hasText(response2.getBody().prettyPrint(), "Bearer");
 
         // *** clear
-        delete(CONTEXT_PATH + "/delete/" + response.jsonPath().getString("id"));
+        delete(CONTEXT_PATH + "/delete/" + createUserDto.email());
     }
 }

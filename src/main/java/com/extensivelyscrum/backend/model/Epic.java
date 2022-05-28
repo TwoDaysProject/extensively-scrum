@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 public class Epic extends BacklogItem{
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "parentEpic")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parentEpic")
     private List<BacklogItem> items;
     public Epic() {}
 }

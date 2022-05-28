@@ -19,7 +19,7 @@ class ProjectServiceUnitTest {
 
     @BeforeAll
     public void setUp() {
-        projectService = new ProjectService(null);
+        projectService = new ProjectService(null, null);
     }
 
 

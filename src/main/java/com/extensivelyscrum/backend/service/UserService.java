@@ -25,8 +25,8 @@ public class UserService {
         );
     }
 
-    public void deleteUserWithId(String id) {
-        userRepository.deleteById(id);
+    public void deleteUserWithEmail(String email) {
+        userRepository.deleteByEmail(email);
     }
 
     public User createUser(CreateUserDto createUserDto) {

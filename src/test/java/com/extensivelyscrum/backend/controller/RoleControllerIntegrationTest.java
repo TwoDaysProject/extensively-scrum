@@ -3,6 +3,7 @@ package com.extensivelyscrum.backend.controller;
 import com.extensivelyscrum.backend.enums.RoleEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,8 +14,7 @@ import static io.restassured.RestAssured.delete;
 import static io.restassured.RestAssured.given;
 import static io.restassured.config.DecoderConfig.ContentDecoder.DEFLATE;
 import static io.restassured.config.DecoderConfig.decoderConfig;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -23,7 +23,7 @@ public class RoleControllerIntegrationTest {
 
     private final String CONTEXT_PATH = "api/role";
     private ObjectMapper mapper;
-    private String email = "maymssssoun@gmail.com";
+    private String email = "maymsss@gmail.com";
     private String password = "somaya";
     private String userID;
     private String jwtToken;
@@ -44,13 +44,13 @@ public class RoleControllerIntegrationTest {
         request.put("fullName",fullName);
         request.put("email",email);
         request.put("password",password);
-        userID =
-        given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
-                contentType("application/json").
-                accept("application/json").
-                body(request).post("api/account/signup").then().extract().response().jsonPath().getString("id");
 
-        System.out.println("thiis" + userID);
+        userID =
+                given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+                        contentType("application/json").
+                        accept("application/json").
+                        body(request).post("api/account/signup").then().extract().response().jsonPath().getString("id");
+
         //login user
         Map<String,Object> request2 = new HashMap<>();
         request2.put("email",email);
@@ -74,8 +74,11 @@ public class RoleControllerIntegrationTest {
 
     @AfterAll
     public void clear() {
-        delete("api/account/delete/" + userID);
-        delete("api/project/deleteProject" + projectID);
+        given().contentType("application/json").
+                header("Authorization",jwtToken).
+                accept("application/json").
+                delete( CONTEXT_PATH +"/deleteProject/" + projectID);
+        delete("api/account/delete/" + email);
     }
 
     @Test
@@ -83,10 +86,10 @@ public class RoleControllerIntegrationTest {
 
         // *** given
         Map<String,Object> request4 = new HashMap<>();
-        request4.put("idProject",projectID);
-        request4.put("UserEmail",email);
+        request4.put("projectId",projectID);
+        request4.put("email",email);
         request4.put("role",RoleEnum.SCRUM_MASTER);
-        given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+        Response response = given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
                         header("Authorization",jwtToken).
                         contentType("application/json").
                         accept("application/json").
@@ -98,7 +101,12 @@ public class RoleControllerIntegrationTest {
         // *** then
         then().
                         log().all().
-                        statusCode(200);
+                        statusCode(200)
+                        .extract().response();
+
+        assertEquals(projectID, response.jsonPath().getString("projectId"));
+        assertEquals(userID, response.jsonPath().getString("userId"));
+        assertEquals(RoleEnum.SCRUM_MASTER, RoleEnum.valueOf(response.jsonPath().getString("role")));
 
     }
 }

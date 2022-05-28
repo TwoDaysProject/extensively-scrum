@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.delete;
@@ -24,7 +25,7 @@ public class ProjectControllerIntegrationTest {
     private final String CONTEXT_PATH = "api/project";
 
     private ObjectMapper mapper;
-    private String email = "maymodkdun@gmail.com";
+    private String email = "testi@gmail.com";
     private String password = "somaya";
     private String userID;
     private String jwtToken;
@@ -51,7 +52,6 @@ public class ProjectControllerIntegrationTest {
                         accept("application/json").
                         body(request).post("api/account/signup").then().extract().response().jsonPath().getString("id");
 
-        System.out.println("thiis" + userID);
         //login user
         Map<String,Object> request2 = new HashMap<>();
         request2.put("email",email);
@@ -67,12 +67,14 @@ public class ProjectControllerIntegrationTest {
 
     @AfterAll
     public void clear() {
-        delete("api/account/delete/" + userID);
+        delete("api/account/delete/" + email);
     }
 
 
     @Test
     public void testNewProject () throws  Exception{
+
+        String projectID1 = null;
 
         //given:
         NewProjectDto newProject = new NewProjectDto("last","last");
@@ -86,18 +88,74 @@ public class ProjectControllerIntegrationTest {
                         header("Authorization",jwtToken).
                         accept("application/json").
                         body(request).
-        //When:
-                when().
+                        //When:
+                                when().
                         post(CONTEXT_PATH + "/create").
-        //Then:
-                then().
+                        //Then:
+                                then().
                         log().all().
                         statusCode(201).
                         contentType("application/json").
                         extract().response();
+
+        projectID1 = response.jsonPath().getString("id");
+
+        given().contentType("application/json").
+                header("Authorization",jwtToken).
+                accept("application/json").
+                delete( CONTEXT_PATH +"/deleteProject/" + projectID1);
+
         assertThat(response).isNotNull();
         assertEquals(newProject.name(),response.jsonPath().getString("name"));
         assertEquals(newProject.description(),response.jsonPath().getString("description"));
+    }
+
+    @Test
+    public void testGetUserProjects () throws  Exception{
+
+        String projectID1 = null;
+        //given:
+        NewProjectDto newProject = new NewProjectDto("last","last");
+        Map<String,Object> request = new HashMap<>();
+        request.put("name",newProject.name());
+        request.put("description",newProject.description());
+
+        projectID1 =
+                given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+                        contentType("application/json").
+                        header("Authorization",jwtToken).
+                        accept("application/json").
+                        body(request).
+                        when().
+                        post(CONTEXT_PATH + "/create").
+                        then().
+                        extract().response().jsonPath().getString("id");
+
+        Response response =
+                given().contentType("application/json").
+                        header("Authorization",jwtToken).
+                        accept("application/json").
+        //When:
+                when().
+                        get(CONTEXT_PATH + "/getUserProjects").
+        //Then:
+                then().
+                        log().all().
+                        statusCode(200).
+                        contentType("application/json").
+                        extract().response();
+
+        given().contentType("application/json").
+                header("Authorization",jwtToken).
+                accept("application/json").
+                delete( CONTEXT_PATH +"/deleteProject/" + projectID1);
+
+        assertThat(response).isNotNull();
+        List<HashMap> listProject = response.jsonPath().getList("");
+        assertEquals(1, listProject.size());
+        assertEquals(newProject.name(),listProject.get(0).get("name"));
+        assertEquals(newProject.description(),listProject.get(0).get("description"));
+
     }
 
 }

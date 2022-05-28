@@ -3,6 +3,7 @@ import java.util.List;
 import com.extensivelyscrum.backend.dto.AddProjectMemberDto;
 import com.extensivelyscrum.backend.dto.GetRoleDto;
 import com.extensivelyscrum.backend.dto.JwtLoginDto;
+import com.extensivelyscrum.backend.dto.ListRoleDto;
 import com.extensivelyscrum.backend.model.Project;
 import com.extensivelyscrum.backend.model.Role;
 import com.extensivelyscrum.backend.model.User;
@@ -24,20 +25,18 @@ public class RoleController {
 
     private RoleService roleService;
 
-    @GetMapping("/getRoles")
-    public ResponseEntity<List<Role>> getCurrentUserRolesInProject(@RequestBody GetRoleDto dto,
-                 @RequestHeader("Authorization") String jwtToken){
-        String email = JwtLoginDto.getEmailFromJwtToken(jwtToken);
+    @PostMapping("/addProjectMember")
+    public ResponseEntity<ListRoleDto> addProjectMembers(@RequestBody AddProjectMemberDto dto) {
         return new ResponseEntity<>(
-                roleService.getCurrentUserRolesInProject(email, dto.idProject()),
+                roleService.addProjectMember(dto),
                 HttpStatus.OK
         );
     }
 
-    @PostMapping("/addProjectMember")
-    public ResponseEntity<Role> addProjectMembers(@RequestBody AddProjectMemberDto dto) {
+    @PostMapping("/delete/{roleId}")
+    public ResponseEntity<Void> addProjectMembers(@PathVariable String roleId) {
+        roleService.deleteRole(roleId);
         return new ResponseEntity<>(
-                roleService.addProjectMember(dto),
                 HttpStatus.OK
         );
     }

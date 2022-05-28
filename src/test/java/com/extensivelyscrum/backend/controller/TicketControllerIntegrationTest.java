@@ -80,14 +80,17 @@ public class TicketControllerIntegrationTest {
                             accept("application/json").
                             body(request3).post("api/project/create").then().extract().response().jsonPath().getString("id");
         } catch (Exception e) {
-            delete("api/account/delete/" + userID);
+            delete("api/account/delete/" + email);
         }
     }
 
     @AfterAll
     public void clear() {
-        delete("api/account/delete/" + userID);
-        delete("api/project/deleteProject" + projectID);
+        delete("api/account/delete/" + email);
+        given().contentType("application/json").
+                header("Authorization",jwtToken).
+                accept("application/json").
+                delete( CONTEXT_PATH +"/deleteProject/" + projectID);
     }
 
 

@@ -18,11 +18,11 @@ public class Role {
     @NotNull(message = "Role should not be null!")
     private RoleEnum role;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     private Project project;
 
     public String getId() {

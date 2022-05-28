@@ -62,8 +62,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/account/signup").permitAll()
                 .antMatchers("/api/account/delete/*").permitAll()
+                .antMatchers("/api/role/delete/*").permitAll()
                 .antMatchers("/api/project/deleteProject/*").permitAll()
                 .antMatchers("/api/project/create").authenticated()
+                /*.antMatchers("/api/project/getUserProjects").hasAnyRole(
+                        "ROLE_SCRUM_MASTER", "ROLE_DEV_TEAM_MEMBER", "ROLE_PRODUCT_OWNER"
+                )*/
                 .anyRequest().authenticated()
         ;
     }

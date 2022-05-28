@@ -29,8 +29,6 @@ public class BacklogItemService {
     private final ProjectService projectService;
     private final EpicService bugService;
 
-    private final RoleService roleService;
-
     public ListBacklogItemsDto createBacklogItem(@NotNull CreateBacklogItemDto dto, JwtTokenDto tokenDto) {
 
         BacklogItemFactory backlogItemFactory;
@@ -61,14 +59,6 @@ public class BacklogItemService {
                 dto.type(),
                 backlogItem.getTag());
     }
-
-    /*public List<ListBacklogItemsDto> listBacklogItems(JwtTokenDto tokenDto) {
-        String email = JwtLoginDto.getEmailFromJwtToken(tokenDto.token());
-        User user = userService.getUserWithEmail(email);
-        List<Role> roleList = roleService.getUserRoles(user);
-        List<Projects>
-        return
-    }*/
 
     public List<ListBacklogItemsDto> listBacklogItems(String projectId) {
         Project project = projectService.getProjectWithId(projectId);

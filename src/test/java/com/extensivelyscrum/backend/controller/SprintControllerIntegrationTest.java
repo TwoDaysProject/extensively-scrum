@@ -77,14 +77,17 @@ class SprintControllerIntegrationTest {
                             accept("application/json").
                             body(request3).post("api/project/create").then().extract().response().jsonPath().getString("id");
         } catch (Exception e) {
-            delete("api/account/delete/" + userID);
+            delete("api/account/delete/" + email);
         }
     }
 
     @AfterAll
     public void clear() {
-        delete("api/project/deleteProject/" + projectID);
-        delete("api/account/delete/" + userID);
+        given().contentType("application/json").
+                header("Authorization",jwtToken).
+                accept("application/json").
+                delete( CONTEXT_PATH +"/deleteProject/" + projectID);
+        delete("api/account/delete/" + email);
     }
 
     @Test
@@ -112,7 +115,7 @@ class SprintControllerIntegrationTest {
                 statusCode(201).
                 extract().response();
 
-        // clear backlog item:}
+        // clear backlog item:
         delete(CONTEXT_PATH + "/delete/" + response.jsonPath().getString("id"));
 
         assertEquals("new sprint", response.jsonPath().getString("name"));
