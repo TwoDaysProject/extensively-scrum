@@ -36,4 +36,12 @@ public class TicketController {
         );
     }
 
+    @PutMapping("/changeStatus")
+    public ResponseEntity<ChangeTicketStatusDto> changeTicketStatus(@RequestBody ChangeTicketStatusDto dto) {
+        return new ResponseEntity<>(
+                ticketService.changeTicketStatus(dto),
+                HttpStatus.OK
+        );
+    }
+
 }

@@ -26,5 +26,7 @@ public abstract class BacklogItem extends BacklogComponent {
     @JoinColumn(name = "EPIC_ID")
     private Epic parentEpic;
 
+    private int storyPoints;
+
     public BacklogItem() {}
 }

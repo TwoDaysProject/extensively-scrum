@@ -2,6 +2,7 @@ package com.extensivelyscrum.backend.controller;
 
 import com.extensivelyscrum.backend.dto.CreateTicketDto;
 import com.extensivelyscrum.backend.dto.NewProjectDto;
+import com.extensivelyscrum.backend.enums.Status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -91,9 +92,10 @@ public class TicketControllerIntegrationTest {
 
 
     @Test
-    public void testNewProject () throws  Exception {
+    public void testCreateTicket () throws  Exception {
 
         //given:
+
         CreateTicketDto ticket = new CreateTicketDto("last", "last", projectID, null);
         Map<String, Object> request = new HashMap<>();
         request.put("name", ticket.name());
@@ -109,10 +111,10 @@ public class TicketControllerIntegrationTest {
                             header("Authorization", jwtToken).
                             accept("application/json").
                             body(request).
-                            //When:
+        //When:
                                     when().
                             post(CONTEXT_PATH + "/create").
-                            //Then:
+        //Then:
                                     then().
                             log().all().
                             statusCode(201).
@@ -131,4 +133,60 @@ public class TicketControllerIntegrationTest {
         }
     }
 
+    @Test
+    void testChangeTicketStatus() {
+
+        //given:
+
+        CreateTicketDto ticket = new CreateTicketDto("last", "last", projectID, null);
+        Map<String, Object> request = new HashMap<>();
+        request.put("name", ticket.name());
+        request.put("description", ticket.description());
+        request.put("projectId", ticket.projectId());
+
+        String ticketId = null;
+
+        try {
+            ticketId =
+                    given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+                            contentType("application/json").
+                            header("Authorization", jwtToken).
+                            accept("application/json").
+                            body(request).
+                                    when().
+                            post(CONTEXT_PATH + "/create").
+                                    then().
+                            log().all().
+                            statusCode(201).
+                            contentType("application/json").
+                            extract().response().jsonPath().getString("id");
+
+            request = new HashMap<>();
+            request.put("ticketId", ticketId);
+            request.put("status", Status.DONE);
+
+            Response response =
+                    given().config(RestAssured.config().decoderConfig(decoderConfig().contentDecoders(DEFLATE))).
+                            contentType("application/json").
+                            header("Authorization", jwtToken).
+                            accept("application/json").
+                            body(request).
+            // when
+                            when().
+                            put(CONTEXT_PATH + "/changeStatus").
+            // then
+                            then().
+                            log().all().
+                            statusCode(200).
+                            contentType("application/json").
+                            extract().response();
+
+            assertThat(response).isNotNull();
+            assertEquals(ticketId, response.jsonPath().getString("ticketId"));
+            assertEquals(Status.DONE, Status.valueOf(response.jsonPath().getString("status")));
+
+        } finally {
+            delete(CONTEXT_PATH + "/delete/" + ticketId);
+        }
+    }
 }

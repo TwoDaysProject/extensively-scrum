@@ -1,10 +1,7 @@
 package com.extensivelyscrum.backend.service;
 
 
-import com.extensivelyscrum.backend.dto.CreateTicketDto;
-import com.extensivelyscrum.backend.dto.JwtLoginDto;
-import com.extensivelyscrum.backend.dto.JwtTokenDto;
-import com.extensivelyscrum.backend.dto.ListTicketsDto;
+import com.extensivelyscrum.backend.dto.*;
 import com.extensivelyscrum.backend.dtoMappers.TicketDtoMapper;
 import com.extensivelyscrum.backend.model.BacklogItem;
 import com.extensivelyscrum.backend.model.Project;
@@ -41,6 +38,20 @@ public class TicketService {
                 ticket.getDescription(),
                 ticket.getTag(),
                 (dto.parentId() != null) ? ticket.getBacklogItem().getName() : null
+        );
+    }
+
+    public Ticket getTicketWithId(String id) {
+        return ticketRepository.findById(id).orElseThrow();
+    }
+
+    public ChangeTicketStatusDto changeTicketStatus(ChangeTicketStatusDto dto) {
+        Ticket ticket = getTicketWithId(dto.ticketId());
+        ticket.setStatus(dto.status());
+        ticket = ticketRepository.save(ticket);
+        return new ChangeTicketStatusDto(
+                ticket.getId(),
+                ticket.getStatus()
         );
     }
 
